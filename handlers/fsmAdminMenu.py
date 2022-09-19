@@ -37,18 +37,15 @@ async def load_description(message: types.Message, state: FSMContext):
     await FSMAdmin.next()
     await message.answer("Сколько стоит это блюдо?")
 async def load_price(message: types.Message, state: FSMContext):
-    try:
-      if message.text.isdigit():
         async with state.proxy() as data:
-          data['price'] = message.text
+          data['price'] = f'{message.text}$'
       await bot.send_photo(message.from_user.id, data['photo'],
                              caption=f"Название блюда: {data['name']}\n"
                                      f"Описание блюда: {data['description']}\n"
                                      f"Цена: {data['price']}\n")
       await state.finish()
       await message.answer("Аппетитно!")
-    except:
-        await message.answer("Пиши числа!")
+  
 
 
 def register_handlers_fsmAdminMenu(dp: Dispatcher):
