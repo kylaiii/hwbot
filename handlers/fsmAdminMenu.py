@@ -3,6 +3,8 @@ from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Text
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from config import bot, ADMIN
+from database import bot_db
+
 
 class FSMAdmin(StatesGroup):
     photo = State()
@@ -37,15 +39,19 @@ async def load_description(message: types.Message, state: FSMContext):
     await FSMAdmin.next()
     await message.answer("Сколько стоит это блюдо?")
 async def load_price(message: types.Message, state: FSMContext):
+    try:
+      if message.text.isdigit():
         async with state.proxy() as data:
-          data['price'] = f'{message.text}$'
+          data['price'] = message.text
       await bot.send_photo(message.from_user.id, data['photo'],
                              caption=f"Название блюда: {data['name']}\n"
                                      f"Описание блюда: {data['description']}\n"
                                      f"Цена: {data['price']}\n")
+      await bot_db.sql_command_insert(state)
       await state.finish()
       await message.answer("Аппетитно!")
-  
+    except:
+        await message.answer("Пиши числа!")
 
 
 def register_handlers_fsmAdminMenu(dp: Dispatcher):
