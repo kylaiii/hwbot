@@ -30,16 +30,16 @@ def get_data(html):
 def parser():
     html = get_html(URL)
     get_data(html.text)
-    # if html.status_code == 200:
-    #   answer=[]
-    #   for page in range(1,3):
-    #       html = get_html(f"{URL}?page={page}")
-    #       current_page = get_data(html.text)
-    #       answer.extend(current_page)
-    #   return answer
-    #
-    # else:
-    #     raise Exception("error in parser!")
+     if html.status_code == 200:
+       answer=[]
+       for page in range(1,3):
+           html = get_html(f"{URL}?page={page}")
+           current_page = get_data(html.text)
+           answer.extend(current_page)
+       return answer
+    
+     else:
+         raise Exception("error in parser!")
 
 parser()
 
