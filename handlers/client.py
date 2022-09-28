@@ -1,6 +1,7 @@
 from aiogram import types, Dispatcher
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from config import bot, dp
+from parser.house import parser
 
 
 
@@ -44,10 +45,21 @@ async def pin(message: types.Message):
                                 message.reply_to_message.message_id)
 
 
+async def house_parser(message: types.Message):
+    house = parser()
+    for i in house:
+        await bot.send_message(message.from_user.id,
+            f'{i["title"]}\n',
+            f'{i["desc"]}\n',
+            f'{i["address"]}\n',
+            f'{i["price"]}\n',
+            f'{i["price_in_soms"]}\n',
+            f'{i["when"]}\n'
+        )
 
 
 def register_handlers_client(dp: Dispatcher):
     dp.register_message_handler(quiz, commands=['quiz'])
     dp.register_message_handler(command_start, commands=["mem"])
     dp.register_message_handler(pin, commands=['pin'], commands_prefix='!/')
-
+    dp.register_message_handler(house_parser, commands=['house'])
