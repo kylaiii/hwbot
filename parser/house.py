@@ -29,7 +29,6 @@ def get_data(html):
 
 def parser():
     html = get_html(URL)
-    get_data(html.text)
      if html.status_code == 200:
        answer=[]
        for page in range(1,3):
